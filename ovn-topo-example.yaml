@@ -1,0 +1,30 @@
+ls1:
+    type: ovn_ls
+    cidr: 10.0.0.0/24 2001::/64
+ls2:
+    type: ovn_ls
+    cidr: 20.0.0.0/24
+    mtu: 1450
+#r1:
+#    type: router
+#    interfaces:
+#        n1: 10.0.0.1/24
+#        n2: 20.0.0.1/24
+onode1:
+    type: ovn_node
+    interfaces:
+        ls1: 00:00:00:00:00:04 10.0.0.4/24
+    chassis: node1
+    chassis_sock: /usr/local/var/run/openvswitch/node1/db.sock
+onode2:
+    type: ovn_node
+    interfaces:
+        ls1: 00:00:00:00:00:05 10.0.0.5/24
+    chassis: node2
+    chassis_sock: /usr/local/var/run/openvswitch/node2/db.sock
+onode3:
+    type: ovn_node
+    interfaces:
+        ls2: 00:00:00:00:00:06 20.0.0.6/24
+    chassis: node1
+    chassis_sock: /usr/local/var/run/openvswitch/node1/db.sock

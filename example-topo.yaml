@@ -1,0 +1,42 @@
+n1:
+    type: switch
+    cidr: 10.0.0.0/24
+n2:
+    type: switch
+    cidr: 20.0.0.0/24
+n3:
+    type: switch
+    cidr: 30.0.0.0/24
+r1:
+    type: router
+    interfaces:
+        n1: 10.0.0.1/24
+        n2: 20.0.0.1/24
+r2:
+    type: router
+    interfaces:
+        n2: 20.0.0.254/24
+        n3: 30.0.0.1/24
+node1:
+    type: node
+    interfaces:
+        n1: 10.0.0.4/24
+    default_route: 10.0.0.1
+node2:
+    type: node
+    interfaces:
+        n2: 20.0.0.5/24
+    default_route: 20.0.0.1
+    extra_routes:
+        30.0.0.0/24: 20.0.0.254
+node3:
+    type: node
+    interfaces:
+        n3: 30.0.0.6/24
+    default_route: 30.0.0.1
+node4:
+    type: node
+    interfaces:
+        n1: 10.0.0.7/24
+        n3: 30.0.0.7/24
+    default_route: 10.0.0.1
