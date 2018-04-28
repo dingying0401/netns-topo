@@ -251,7 +251,7 @@ def setup_bridge_node(name, info):
         setup_bridge_interface(name, 'node', switch, cidr)
         for (switch, cidr) in info['interfaces'].iteritems()]
     ret.insert(0, add_netns(name))
-    ret.append(add_route(name, 'default', info['default_route']))
+    ret.append(add_route(name, 'default', info.get('default_route')))
     ret.append(set_dev_up('lo', name))
     ret.extend([
         add_route(name, dest, nexthop)
