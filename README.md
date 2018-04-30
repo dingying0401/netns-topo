@@ -8,3 +8,10 @@ Requirements
 PyYAML
 python-netaddr
 bridge-utils
+
+
+Flask requirements
+==================
+
+python-gunicorn
+flask
