@@ -1,0 +1,27 @@
+n1:
+    type: switch
+    cidr: 10.0.0.0/24
+node:
+    type: node
+    interfaces:
+        n1: 10.0.0.4/24
+lb1:
+    type: node
+    interfaces:
+        n1: 10.0.0.7/24
+lb2:
+    type: node
+    interfaces:
+        n1: 10.0.0.8/24
+lb3:
+    type: node
+    interfaces:
+        n1: 10.0.0.9/24
+lb-outer:
+    type: node
+    interfaces:
+        n1: 10.0.0.10/24
+client:
+    type: node
+    interfaces:
+        n1: 10.0.0.3/24
