@@ -1,17 +1,12 @@
 services:
     ready: "echo ready"
-    ok: echo ok
+    ping: ping 127.0.0.1 -c3 -w3
 n1:
     type: switch
     cidr: 10.0.0.0/24
-    service:
-        - ready
 n2:
     type: switch
     cidr: 20.0.0.0/24
-    service:
-        - ready
-        - ok
 n3:
     type: switch
     cidr: 30.0.0.0/24
@@ -42,9 +37,14 @@ node3:
     interfaces:
         n3: 30.0.0.6/24
     default_route: 30.0.0.1
+    service:
+        - ready
 node4:
     type: node
     interfaces:
         n1: 10.0.0.7/24
         n3: 30.0.0.7/24
     default_route: 10.0.0.1
+    service:
+        - ping
+        - ready
