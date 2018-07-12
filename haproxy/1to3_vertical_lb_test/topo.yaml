@@ -1,7 +1,11 @@
+description: |
+    Topo test for 3 haproxy befind 1 outer haproxy.
+    Outer haproxy try to use http-check to check/probe server befind 3 inner haproxy.
+    !!! It doesn't work yet. !!!
 services:
-    flask: gunicorn -b 0.0.0.0:80 haproxy.flask-svc-timeout:application -D
-    haproxy: haproxy -f haproxy/haproxy2.config -p /var/run/lb-lb-http-haproxy.pid
-    outer_ha: haproxy -f haproxy/haproxy-outer2.config /var/run/lb-lb-http-outer-haproxy.pid
+    flask: gunicorn -b 0.0.0.0:80 flask-svc.flask-svc-timeout:application -D
+    haproxy: haproxy -f haproxy/1to3_vertical_lb_test/haproxy.config -p /var/run/1to3_vertical_lb_test-haproxy.pid
+    outer_ha: haproxy -f haproxy/1to3_vertical_lb_test/haproxy-outer.config -p /var/run/1to3_vertical_lb_test-outer-haproxy.pid
 n1:
     type: switch
     cidr: 10.0.0.0/24

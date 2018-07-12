@@ -421,7 +421,7 @@ def setup_or_destroy(topo_d, method, debug):
 
     try:
         for name, info in topo_d.iteritems():
-            if name == 'services':
+            if name in ('services', 'description'):
                 continue
             _type = info['type']
             if _type not in setup_methods:
@@ -446,6 +446,8 @@ def setup_or_destroy(topo_d, method, debug):
                 cmds.insert(0, cmd)
             else:
                 cmds.append(cmd)
+        if method == 'setup' and 'description' in topo_d:
+            cmds.append('\necho "%s"' % topo_d.get('description'))
     except ValueError as e:
         print e.message
         return
@@ -482,7 +484,7 @@ if __name__ == '__main__':
         if os.path.exists(LOCK) and method == 'setup' and not debug:
             print (
                 "It's in topology %(topo)s, no more topo can get setup before "
-                "destory %(topo)s" % {'topo': open(LOCK).read()})
+                "destroy %(topo)s" % {'topo': open(LOCK).read()})
             os.sys.exit(1)
         topo_d = get_topo(topo_yaml)
         if not topo_d:

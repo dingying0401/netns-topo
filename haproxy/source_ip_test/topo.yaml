@@ -1,7 +1,9 @@
+description: |
+    A simple topo test for haproxy source algorithm.
+    After setup, you can run test script haproxy/source_ip_test/test.sh
 services:
-    flask: gunicorn -b 0.0.0.0:80 haproxy.flask-svc:application -D
-    outer_ha: haproxy -f haproxy/haproxy-outer.config -p /var/run/lb-lb-haproxy-outer.pid
-    haproxy: haproxy -f haproxy/haproxy.config -p /var/run/lb-lb-haproxy.pid
+    flask: gunicorn -b 0.0.0.0:80 flask-svc.flask-svc:application -D
+    haproxy: haproxy -f haproxy/source_ip_test/haproxy.config -p /var/run/source_ip_test-haproxy.pid
 n1:
     type: switch
     cidr: 10.0.0.0/24
@@ -26,28 +28,29 @@ node3:
         n1: 10.0.0.6/24
     service:
         - flask
-lb-outer:
-    type: node
-    interfaces:
-        n2: 20.0.0.3/24
-    service:
-        - outer_ha
-lb:
+lb1:
     type: node
     interfaces:
         n1: 10.0.0.2/24
         n2: 20.0.0.2/24
     service:
         - haproxy
+lb2:
+    type: node
+    interfaces:
+        n1: 10.0.0.3/24
+        n2: 20.0.0.3/24
+    service:
+        - haproxy
 client1:
     type: node
     interfaces:
-        n2: 20.0.0.4/24
+        n2: 20.0.0.14/24
 client2:
     type: node
     interfaces:
-        n2: 20.0.0.5/24
+        n2: 20.0.0.15/24
 client3:
     type: node
     interfaces:
-        n2: 20.0.0.6/24
+        n2: 20.0.0.16/24

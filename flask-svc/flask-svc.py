@@ -7,7 +7,7 @@ application = Flask(__name__)
 
 @application.route("/")
 def hello():
-    return "%s: Hello World!" % (os.popen('ip netns identify').read().strip()), 300
+    return "%s: Hello World!\n" % os.popen('ip netns identify').read().strip()
 
 
 if __name__ == "__main__":

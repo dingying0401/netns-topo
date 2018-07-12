@@ -1,7 +1,10 @@
+description: |
+    A simple topo test for haproxy with http-check.
+    After setup, you run script test haproxy/http_check_test/test.sh
 services:
-    flask: gunicorn -b 0.0.0.0:80 haproxy.flask-svc:application -D
-    flask-300: gunicorn -b 0.0.0.0:80 haproxy.flask-svc-300:application -D
-    haproxy: haproxy -f haproxy/haproxy-http-check.config -p /var/run/lb-http-haproxy.pid
+    flask: gunicorn -b 0.0.0.0:80 flask-svc.flask-svc:application -D
+    flask-300: gunicorn -b 0.0.0.0:80 flask-svc.flask-svc-300:application -D
+    haproxy: haproxy -f haproxy/http_check_test/haproxy.config -p /var/run/http_check_test-haproxy.pid
 n1:
     type: switch
     cidr: 10.0.0.0/24

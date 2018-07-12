@@ -1,6 +1,10 @@
+description: |
+    Topo test for haproxy behind a outer haproxy, balance method hdr will be tested.
+    After setup, you can run test script haproxy/1to1_vertical_lb_test/test.sh
 services:
-    flask: gunicorn -b 0.0.0.0:80 haproxy.flask-svc:application -D
-    haproxy: haproxy -f haproxy/haproxy.config -p /var/run/lb-haproxy.pid
+    flask: gunicorn -b 0.0.0.0:80 flask-svc.flask-svc:application -D
+    outer_ha: haproxy -f haproxy/1to1_vertical_lb_test/haproxy-outer.config -p /var/run/1to1_vertical_lb_test-haproxy-outer.pid
+    haproxy: haproxy -f haproxy/1to1_vertical_lb_test/haproxy.config -p /var/run/1to1_vertical_lb_test-haproxy.pid
 n1:
     type: switch
     cidr: 10.0.0.0/24
@@ -25,6 +29,12 @@ node3:
         n1: 10.0.0.6/24
     service:
         - flask
+lb-outer:
+    type: node
+    interfaces:
+        n2: 20.0.0.3/24
+    service:
+        - outer_ha
 lb:
     type: node
     interfaces:
