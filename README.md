@@ -1,26 +1,11 @@
 # netns-topo
-A simple script tool to deploy L2-L3 networking environment with netns on a single node.
+A simple script tool to deploy L2-L3 networking environment with netns,
+linuxbridge on a single node, for networking tests.
 
-
-Requirements
-============
-PyYAML
-python-netaddr
-bridge-utils
-
-
-Flask requirements
-==================
-gunicorn
-flask
-
-
-Keepalived requirements
-=======================
-keepalived
+Check topo and test in keepalived and haproxy, hope helpful.
 
 
 Known issue
 ===========
-Sometime restarting network service is needed, or virtual network topology won't work,
-virtual node is not reachable for each other.
+Sometime restarting network service is needed, or virtual network topology
+won't work, virtual node is not reachable for each other.

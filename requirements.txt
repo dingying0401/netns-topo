@@ -1,0 +1,21 @@
+Requirements
+============
+PyYAML
+python-netaddr
+bridge-utils
+
+
+Flask requirements
+==================
+gunicorn
+flask
+
+
+Keepalived requirements
+=======================
+keepalived
+
+
+Haproxy requirements
+====================
+haproxy

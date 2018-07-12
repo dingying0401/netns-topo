@@ -442,6 +442,9 @@ def setup_or_destroy(topo_d, method, debug):
                 cmd += '\n' + '\n'.join(svc_cmds)
             elif info.get('service'):
                 cmd = 'ip netns pids %s | xargs kill -9\n' % name  + cmd
+                cmd = (
+                    'pids=`ip netns pids %s`; if test ! -z $pids ; then kill'
+                    ' -9 $pids; fi\n' % name  + cmd)
             if top:
                 cmds.insert(0, cmd)
             else:
