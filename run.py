@@ -10,6 +10,7 @@ import yaml
 TOP = True
 BOTTOM = False
 DEFAULT_MTU = 1500
+LOCK = '/var/lib/netns-topo.lock'
 
 
 def get_topo(filename):
@@ -478,10 +479,21 @@ if __name__ == '__main__':
         if not os.path.exists(topo_yaml):
             print 'Need a topology yaml file'
             os.sys.exit(1)
+        if os.path.exists(LOCK) and method == 'setup' and not debug:
+            print (
+                "It's in topology %(topo)s, no more topo can get setup before "
+                "destory %(topo)s" % {'topo': open(LOCK).read()})
+            os.sys.exit(1)
         topo_d = get_topo(topo_yaml)
         if not topo_d:
             print "No invalid yaml topo found."
             os.sys.exit(1)
         setup_or_destroy(topo_d, method, debug)
+        if not debug:
+            if method == 'setup':
+                with open(LOCK, 'w+') as f:
+                    f.write(topo_yaml)
+            else:
+                os.remove(LOCK)
     else:
         _help()

@@ -1,3 +1,7 @@
+services:
+    flask: gunicorn -b 0.0.0.0:80 haproxy.flask-svc:application -D
+    flask-300: gunicorn -b 0.0.0.0:80 haproxy.flask-svc-300:application -D
+    haproxy: haproxy -f haproxy/haproxy-http-check.config -p /var/run/lb-http-haproxy.pid
 n1:
     type: switch
     cidr: 10.0.0.0/24
@@ -5,18 +9,26 @@ node1:
     type: node
     interfaces:
         n1: 10.0.0.4/24
+    service:
+        - flask
 node2:
     type: node
     interfaces:
         n1: 10.0.0.5/24
+    service:
+        - flask
 node3:
     type: node
     interfaces:
         n1: 10.0.0.6/24
+    service:
+        - flask-300
 lbhttpchk:
     type: node
     interfaces:
         n1: 10.0.0.2/24
+    service:
+        - haproxy
 client:
     type: node
     interfaces:

@@ -1,3 +1,7 @@
+services:
+    flask: gunicorn -b 0.0.0.0:80 haproxy.flask-svc:application -D
+    outer_ha: haproxy -f haproxy/haproxy-outer.config -p /var/run/lb-lb-haproxy-outer.pid
+    haproxy: haproxy -f haproxy/haproxy.config -p /var/run/lb-lb-haproxy.pid
 n1:
     type: switch
     cidr: 10.0.0.0/24
@@ -8,23 +12,33 @@ node1:
     type: node
     interfaces:
         n1: 10.0.0.4/24
+    service:
+        - flask
 node2:
     type: node
     interfaces:
         n1: 10.0.0.5/24
+    service:
+        - flask
 node3:
     type: node
     interfaces:
         n1: 10.0.0.6/24
+    service:
+        - flask
 lb-outer:
     type: node
     interfaces:
         n2: 20.0.0.3/24
+    service:
+        - outer_ha
 lb:
     type: node
     interfaces:
         n1: 10.0.0.2/24
         n2: 20.0.0.2/24
+    service:
+        - haproxy
 client1:
     type: node
     interfaces:
