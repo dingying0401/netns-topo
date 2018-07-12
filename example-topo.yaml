@@ -1,9 +1,13 @@
+services:
+    ready: "echo ready"
 n1:
     type: switch
     cidr: 10.0.0.0/24
+    service: ready
 n2:
     type: switch
     cidr: 20.0.0.0/24
+    service: ready
 n3:
     type: switch
     cidr: 30.0.0.0/24

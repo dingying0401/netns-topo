@@ -402,7 +402,7 @@ def ovn_pre_check(topo_d, name, info):
                 "%s interface doesn't have an valid 'chassis_sock'" % name)
 
 
-def setup_or_destroy(topo_d, method):
+def setup_or_destroy(topo_d, method, debug):
     cmds = []
     setup_methods = {
         'node': setup_bridge_node,
@@ -420,6 +420,8 @@ def setup_or_destroy(topo_d, method):
 
     try:
         for name, info in topo_d.iteritems():
+            if name == 'services':
+                continue
             _type = info['type']
             if _type not in setup_methods:
                 raise ValueError(
@@ -431,6 +433,14 @@ def setup_or_destroy(topo_d, method):
                 else:
                     pre_check(topo_d, name, info)
             cmd, top = methods[method][_type](name, info)
+            if method == 'setup':
+                svc_cmds = [
+                    "ip netns exec %s %s" % (
+                        name, topo_d.get('services').get(svc, 'echo ""'))
+                    for svc in info.get('service', [])]
+                cmd += '\n' + '\n'.join(svc_cmds)
+            elif info.get('service'):
+                cmd = 'ip netns pids %s | xargs kill -9\n' % name  + cmd
             if top:
                 cmds.insert(0, cmd)
             else:
@@ -442,17 +452,27 @@ def setup_or_destroy(topo_d, method):
         cmd_file = './%s_netns_topo_cmds' % method
         with open(cmd_file, 'w+') as f:
             f.write('\n'.join(cmds))
-        os.system('bash %s' % cmd_file)
-        os.remove(cmd_file)
+        if debug:
+            print "you can check %s for debug" % cmd_file
+        else:
+            os.system('bash %s' % cmd_file)
+            os.remove(cmd_file)
 
 
 if __name__ == '__main__':
     def _help():
-        print 'python run.py {setup|destroy} topo.yaml'
+        print 'python run.py {setup|destroy} topo.yaml [-d|d|debug]'
         os.sys.exit(0)
 
     if len(os.sys.argv) >= 3:
         method, topo_yaml = os.sys.argv[1:3]
+        debug = False
+        if len(os.sys.argv) == 4:
+            debug = os.sys.argv[3]
+            if debug not in ('d', 'debug'):
+                _help()
+            else:
+                debug = True
         if method not in ('setup', 'destroy'):
             _help()
         if not os.path.exists(topo_yaml):
@@ -462,6 +482,6 @@ if __name__ == '__main__':
         if not topo_d:
             print "No invalid yaml topo found."
             os.sys.exit(1)
-        setup_or_destroy(topo_d, method)
+        setup_or_destroy(topo_d, method, debug)
     else:
         _help()
